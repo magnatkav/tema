@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тема месяца · Личная ЭФФЕКТИВНОСТЬ</title>
+<meta name="description" content="Одна тема в месяц, 4 задания — по одному в неделю. Отмечай сделанное и смотри, сколько людей идут вместе с тобой.">
+<style>
+  :root {
+    --bg: #f4eee4;
+    --surface: #fbf8f2;
+    --surface-line: #e4d9c8;
+    --ink: #2e241b;
+    --ink-soft: #6a5a4a;
+    --ink-faint: #9a8a78;
+    --accent: #8a5a34;
+    --accent-ink: #fbf8f2;
+    --accent-soft: #efe2d2;
+    --done: #5f7a4a;
+    --done-soft: #e5ead9;
+    --rule: #ddd0bd;
+    --shadow: 0 1px 2px rgba(46, 36, 27, .05), 0 10px 24px -14px rgba(46, 36, 27, .25);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1712;
+      --surface: #241e18;
+      --surface-line: #3a3027;
+      --ink: #f0e8dc;
+      --ink-soft: #c7b8a6;
+      --ink-faint: #8f8070;
+      --accent: #d29a66;
+      --accent-ink: #1c1712;
+      --accent-soft: #3a2c20;
+      --done: #9cbc84;
+      --done-soft: #26301f;
+      --rule: #3a3027;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -16px rgba(0,0,0,.6);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, 'Segoe UI', Roboto, 'PT Sans', Verdana, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 760px; margin: 0 auto; padding: 56px 16px 80px; display: flex; flex-direction: column; gap: 40px; }
+  .serif { font-family: Georgia, 'Times New Roman', serif; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 12.5px; font-weight: 700; color: var(--accent); }
+  header.head { display: flex; flex-direction: column; gap: 12px; }
+  h1 { font-family: Georgia, serif; font-weight: 700; font-size: clamp(2.1rem, 7vw, 3rem); line-height: 1.08; margin: 0; text-wrap: balance; }
+  .subtitle { color: var(--ink-soft); font-size: 1.05rem; margin: 0; max-width: 60ch; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  .stat {
+    background: var(--surface); border: 1px solid var(--surface-line); border-radius: 10px;
+    padding: 14px 14px 12px; box-shadow: var(--shadow);
+  }
+  .stat b { display: block; font-family: Georgia, serif; font-size: 1.9rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 13px; color: var(--ink-faint); line-height: 1.3; display: block; margin-top: 4px; }
+  .stat.me b { color: var(--accent); }
+  .bar { height: 6px; background: var(--accent-soft); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 3px; transition: width .4s ease; }
+  .stats-note { font-size: 12.5px; color: var(--ink-faint); margin: 8px 2px 0; }
+
+  .intro { background: var(--surface); border: 1px solid var(--surface-line); border-radius: 10px; padding: 22px 24px; box-shadow: var(--shadow); }
+  .intro p { margin: 0; }
+  .intro p + p { margin-top: 12px; }
+
+  .section-label { font-family: Georgia, serif; font-weight: 700; font-size: 1.5rem; margin: 0 0 4px; }
+  .week { display: grid; grid-template-columns: 60px 1fr; gap: 0 18px; padding: 28px 0; border-top: 1px solid var(--rule); }
+  .week:last-child { border-bottom: 1px solid var(--rule); }
+  .week-index { font-family: Georgia, serif; font-weight: 700; font-size: 2.5rem; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+  .week-index small { display: block; font-family: inherit; font-weight: 700; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 6px; }
+  .week.is-done .week-index { color: var(--done); }
+  .week.is-locked .week-body > :not(.lock-note):not(h3) { display: none; }
+  .week.is-locked { opacity: .65; }
+  .week h3 { font-family: Georgia, serif; font-size: 1.45rem; font-weight: 700; margin: 0 0 6px; text-wrap: balance; }
+  .when { font-size: 13px; color: var(--ink-faint); }
+  .now-tag { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; background: var(--accent); color: var(--accent-ink); border-radius: 4px; padding: 1px 7px; margin-left: 6px; vertical-align: 2px; }
+  .field { margin-top: 14px; }
+  .field-label { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--ink-faint); margin-bottom: 4px; }
+  .field-label.why { color: var(--accent); }
+  .field p { margin: 0; color: var(--ink-soft); }
+  .field.task p { color: var(--ink); }
+  .field.why p { font-style: italic; }
+  .lock-note { margin: 4px 0 0; color: var(--ink-faint); font-size: 15px; }
+
+  .act { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 20px; }
+  .btn {
+    appearance: none; border: 2px solid var(--accent); background: transparent; color: var(--accent);
+    font: inherit; font-weight: 700; font-size: 16px; padding: 10px 18px; border-radius: 999px; cursor: pointer;
+    min-height: 46px; transition: background .15s, color .15s, transform .1s;
+  }
+  .btn:hover { background: var(--accent-soft); }
+  .btn:active { transform: scale(.97); }
+  .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .btn.on { background: var(--done); border-color: var(--done); color: #fff; }
+  .count { font-size: 14.5px; color: var(--ink-soft); }
+  .count b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .final { display: none; background: var(--done-soft); border: 1px solid var(--done); border-radius: 10px; padding: 22px 24px; }
+  .final.show { display: block; }
+  .final h2 { font-family: Georgia, serif; margin: 0 0 8px; font-size: 1.5rem; }
+  .final p { margin: 0; }
+  .final p + p { margin-top: 10px; }
+
+  footer.closing { background: var(--surface); border: 1px solid var(--surface-line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 20px 24px; }
+  footer.closing p { margin: 0; color: var(--ink-soft); }
+  footer.closing p + p { margin-top: 10px; }
+  footer.closing strong { color: var(--ink); }
+  a { color: var(--accent); }
+  .source-note { font-size: 12.5px; color: var(--ink-faint); border-top: 1px solid var(--rule); padding-top: 18px; margin: 0; }
+
+  @media (max-width: 560px) {
+    .page { padding-top: 36px; gap: 32px; }
+    .week { grid-template-columns: 1fr; gap: 6px; }
+    .week-index { font-size: 2rem; }
+    .week-index small { display: inline; margin-left: 8px; }
+    .stat { padding: 12px 10px 10px; }
+    .stat b { font-size: 1.5rem; }
+    .stat span { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="head">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="title"></h1>
+    <p class="subtitle" id="subtitle"></p>
+  </header>
+
+  <section aria-label="Прогресс">
+    <div class="stats">
+      <div class="stat me"><b id="myDone">0/4</b><span>твой прогресс</span><div class="bar"><i id="myBar"></i></div></div>
+      <div class="stat"><b id="allMarks">—</b><span>отметок «сделал» от всех</span></div>
+      <div class="stat"><b id="allFour">—</b><span>человек закрыли все 4</span></div>
+    </div>
+    <p class="stats-note" id="statsNote">Счётчик анонимный: никто не видит, кто именно отметился.</p>
+  </section>
+
+  <section class="intro" id="intro"></section>
+
+  <section>
+    <h2 class="section-label">Задания по неделям</h2>
+    <div id="weeks"></div>
+  </section>
+
+  <section class="final" id="final"></section>
+
+  <footer class="closing" id="closing"></footer>
+
+  <p class="source-note">Личная ЭФФЕКТИВНОСТЬ · тема месяца, каждый месяц новая · <a href="https://t.me/tutuspehtop">канал в Telegram</a></p>
+</div>
+
+<script>
+/* ===================== НАСТРОЙКИ МЕСЯЦА =====================
+   Новый месяц = поменять этот блок. Остальное не трогать.
+   start — понедельник первой недели. Каждая следующая неделя открывается через 7 дней.
+   api   — ссылка на Google Apps Script (/exec). Пусто = счётчик выключен, галочки работают.  */
+const MONTH = {
+  id: '2026-11',
+  eyebrow: 'Тема месяца · Ноябрь',
+  title: 'Тело и Энергия',
+  subtitle: 'Одна тема на месяц, 4 задания — по одному в неделю. Делаешь, отмечаешь здесь и пишешь пару слов в комментариях под постом.',
+  start: '2026-11-02',
+  api: 'https://script.google.com/macros/s/AKfycbwqeyOhKyxZCxdCbQJ9Z_l8qfAMn3lNGMHUdHMTwGk0LaHNOJC7mfCE_qGNfsSW9HEhtw/exec',
+  intro: [
+    'Дисциплина держится не на силе воли, а на энергии. Когда тело выспалось, попило воды и не сидит на сахарных горках, держать слово себе в разы легче.',
+    'В этом месяце разбираем тело как систему, которая либо даёт тебе энергию на весь день, либо тихо её ворует. Без диет и «надо похудеть». Только то, что реально влияет на силы с утра до вечера.'
+  ],
+  weeks: [
+    {
+      title: 'Фундамент',
+      why: 'Сон, вода и сахар решают больше, чем любая мотивация. Если фундамент шатается, никакая дисциплина его не удержит.',
+      task: '7 дней подряд записывай пять цифр: часы сна, литры воды, сколько было сладкого (честно: соусы, хлопья и напитки тоже считаются), шаги за день и был ли белок в каждом приёме пищи. 2 минуты вечером, в заметках телефона.',
+      comment: 'В конце недели — одно слово: где у тебя самый большой провал из пяти (сон / вода / сахар / шаги / белок). С него и начинаем чинить.'
+    },
+    {
+      title: 'Уход, который экономит энергию',
+      why: 'Уход за собой не про красоту. Когда тело в порядке, оно меньше дёргает твоё внимание в течение дня.',
+      task: 'Выбери 3 привычки, которых у тебя ещё нет: умывание + крем утром; рыба или Омега-3 в рационе; маска или скраб раз в неделю; нормальная стрижка; запись к стоматологу, которую откладываешь. Начни все 3 с понедельника.',
+      comment: 'Какие 3 привычки выбрал(а) и оценка 1–10 через неделю: стало ли больше уверенности от того, что тело в порядке.'
+    },
+    {
+      title: 'Образ и осанка',
+      why: 'То, как ты стоишь и во что одет(а), меняет самоощущение раньше, чем кто-то успеет сказать хоть слово.',
+      task: 'Пересчитай гардероб: сколько вещей носишь реально, а сколько висит без дела (обычно 20% вещей закрывают 80% случаев). И всю неделю раз в час — 5-секундная проверка: плечи вниз, спина ровно, подбородок параллельно полу.',
+      comment: 'Твоя пропорция гардероба (сколько % реально носишь) и одно изменение, которое сделаешь на этой неделе.'
+    },
+    {
+      title: 'Энергия и долголетие',
+      why: 'ВОЗ советует две вещи: 150 минут движения в неделю (это около 20 минут ходьбы в день) и 2 силовые в неделю. Про первое многие помнят, про второе почти все забывают.',
+      task: 'Добавь 2 короткие силовые по 15–20 минут, можно дома: приседания, отжимания, планка, выпады. Каждый день минимум 30 минут пешком. И один вечер без алкоголя, если он обычно есть.',
+      comment: 'Сколько силовых сделал(а) и как себя чувствуешь — бодрее или тяжелее? Это финал месяца: подводим итог всех 4 недель.'
+    }
+  ],
+  final: [
+    'Ты закрыл(а) все 4 задания. Месяц назад это были просто планы, а теперь у тебя в руках 4 новые привычки.',
+    'Напиши в комментариях под последним постом «4/4» — пусть остальные видят, что это реально.'
+  ],
+  closing: [
+    '<strong>Хочешь не 4 задания, а 21 день с поддержкой?</strong> Марафон «Денежная ходьба»: каждый день ходьба + задание на деньги и цели, в чате с такими же людьми. Пиши <a href="https://t.me/magnatavk">@magnatavk</a> слово <strong>ХОДЬБА21</strong>.',
+    'В следующем месяце — новая тема и снова 4 задания. Следи за каналом.'
+  ]
+};
+/* =========================================================== */
+
+const MS_DAY = 86400000;
+const params = new URLSearchParams(location.search);
+const PREVIEW = params.has('preview');
+const KEY = 'tema_' + MONTH.id;
+const MONTHS_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+
+function loadMine() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+}
+function saveMine(m) {
+  try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {}
+}
+let mine = loadMine();
+let counts = null;
+
+function weekStart(i) {
+  const [y, mo, d] = MONTH.start.split('-').map(Number);
+  return new Date(y, mo - 1, d + i * 7);
+}
+function fmt(d) { return d.getDate() + ' ' + MONTHS_GEN[d.getMonth()]; }
+function isOpen(i) { return PREVIEW || new Date() >= weekStart(i); }
+function isCurrent(i) {
+  const now = new Date();
+  return now >= weekStart(i) && now < weekStart(i + 1);
+}
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function people(n) {
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return 'человек';
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return 'человека';
+  return 'человек';
+}
+
+function render() {
+  document.getElementById('eyebrow').textContent = MONTH.eyebrow;
+  document.getElementById('title').textContent = MONTH.title;
+  document.getElementById('subtitle').textContent = MONTH.subtitle;
+  document.title = MONTH.title + ' · Тема месяца';
+  document.getElementById('intro').innerHTML = MONTH.intro.map(p => '<p>' + esc(p) + '</p>').join('');
+  document.getElementById('closing').innerHTML = MONTH.closing.map(p => '<p>' + p + '</p>').join('');
+  document.getElementById('final').innerHTML = '<h2>4 из 4 🔥</h2>' + MONTH.final.map(p => '<p>' + esc(p) + '</p>').join('');
+
+  document.getElementById('weeks').innerHTML = MONTH.weeks.map((w, i) => {
+    const s = weekStart(i), e = new Date(s.getTime() + 6 * MS_DAY);
+    const open = isOpen(i);
+    const cls = ['week', open ? '' : 'is-locked', mine['t' + (i + 1)] ? 'is-done' : ''].join(' ');
+    return `
+    <article class="${cls}" data-i="${i}">
+      <div class="week-index">0${i + 1}<small>Неделя</small></div>
+      <div class="week-body">
+        <h3>${esc(w.title)}</h3>
+        <div class="when">${fmt(s)} — ${fmt(e)}${isCurrent(i) ? '<span class="now-tag">сейчас</span>' : ''}</div>
+        ${open ? '' : `<p class="lock-note">${i === 0 ? 'Старт темы — ' + fmt(s) + '. Загляни в понедельник.' : 'Откроется ' + fmt(s) + '. Сначала закрой текущее задание.'}</p>`}
+        <div class="field why"><div class="field-label why">Зачем</div><p>${esc(w.why)}</p></div>
+        <div class="field task"><div class="field-label">Задание</div><p>${esc(w.task)}</p></div>
+        <div class="field"><div class="field-label">Что пишем в комментариях</div><p>${esc(w.comment)}</p></div>
+        <div class="act">
+          <button class="btn" type="button" data-k="t${i + 1}" aria-pressed="false">Отметить: сделал(а)</button>
+          <span class="count" data-c="t${i + 1}"></span>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  document.querySelectorAll('.btn[data-k]').forEach(b => b.addEventListener('click', () => toggle(b.dataset.k)));
+  paint();
+}
+
+function myTotal() { return MONTH.weeks.filter((_, i) => mine['t' + (i + 1)]).length; }
+
+function paint() {
+  const n = myTotal(), total = MONTH.weeks.length;
+  document.getElementById('myDone').textContent = n + '/' + total;
+  document.getElementById('myBar').style.width = (n / total * 100) + '%';
+  document.getElementById('final').classList.toggle('show', n === total);
+
+  document.querySelectorAll('.btn[data-k]').forEach(b => {
+    const on = !!mine[b.dataset.k];
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on);
+    b.textContent = on ? '✓ Сделано' : 'Отметить: сделал(а)';
+    b.closest('.week').classList.toggle('is-done', on);
+  });
+
+  document.querySelectorAll('[data-c]').forEach(el => {
+    if (!counts) { el.textContent = ''; return; }
+    const c = counts[el.dataset.c] || 0;
+    el.innerHTML = c ? `уже сделали <b>${c}</b> ${people(c)}` : 'стань первым, кто отметится';
+  });
+
+  if (counts) {
+    const marks = MONTH.weeks.reduce((s, _, i) => s + (counts['t' + (i + 1)] || 0), 0);
+    document.getElementById('allMarks').textContent = marks;
+    document.getElementById('allFour').textContent = counts.all || 0;
+  } else if (!MONTH.api) {
+    document.getElementById('statsNote').textContent = 'Общий счётчик скоро заработает. Твои отметки уже сохраняются на этом устройстве.';
+  }
+}
+
+async function api(query) {
+  if (!MONTH.api) return null;
+  try {
+    const r = await fetch(MONTH.api + '?m=' + encodeURIComponent(MONTH.id) + '&' + query, { redirect: 'follow' });
+    const j = await r.json();
+    return j && j.ok ? j.counts : null;
+  } catch (e) {
+    console.warn('Счётчик недоступен:', e);
+    return null;
+  }
+}
+
+async function toggle(k) {
+  const was = !!mine[k];
+  const wasAll = myTotal() === MONTH.weeks.length;
+  mine[k] = !was;
+  if (!mine[k]) delete mine[k];
+  saveMine(mine);
+  const nowAll = myTotal() === MONTH.weeks.length;
+
+  // мгновенно показываем изменение, потом сверяемся с сервером
+  if (counts) {
+    counts[k] = Math.max(0, (counts[k] || 0) + (was ? -1 : 1));
+    if (nowAll !== wasAll) counts.all = Math.max(0, (counts.all || 0) + (nowAll ? 1 : -1));
+  }
+  paint();
+  if (!was && nowAll) document.getElementById('final').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  let q = 'a=add&k=' + k + '&d=' + (was ? -1 : 1);
+  if (nowAll !== wasAll) q += '&all=' + (nowAll ? 1 : -1);
+  const fresh = await api(q);
+  if (fresh) { counts = fresh; paint(); }
+}
+
+render();
+api('a=get').then(c => { if (c) { counts = c; paint(); } });
+</script>
+</body>
+</html>
